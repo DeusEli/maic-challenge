@@ -6,11 +6,11 @@ Una aplicación web que utiliza inteligencia artificial para analizar archivos d
 
 Este proyecto nació de la necesidad de hacer el análisis de datos más accesible. En lugar de pasar horas explorando datasets manualmente, la aplicación usa IA para identificar patrones interesantes y sugerir las visualizaciones más relevantes automáticamente.
 
-La aplicación acepta archivos CSV o XLSX, los procesa, y utiliza Claude Sonnet (vía OpenAI API) para generar sugerencias inteligentes de gráficos basadas en el contenido y estructura de los datos.
+La aplicación acepta archivos CSV o XLSX, los procesa, y utiliza GPT-4 (vía OpenAI API) para generar sugerencias inteligentes de gráficos basadas en el contenido y estructura de los datos.
 
 ## ✨ Características
 
-- **Análisis automático con IA**: Claude Sonnet analiza la estructura de tus datos y sugiere visualizaciones relevantes
+- **Análisis automático con IA**: GPT-4 analiza la estructura de tus datos y sugiere visualizaciones relevantes
 - **Soporte para múltiples formatos**: CSV y XLSX
 - **Limpieza inteligente de datos**: Maneja automáticamente valores monetarios ($), NaN, y datos faltantes
 - **Visualizaciones interactivas**: Gráficos de barras, líneas, áreas, dispersión, circulares e histogramas
