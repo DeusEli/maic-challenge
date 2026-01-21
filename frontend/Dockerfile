@@ -21,6 +21,10 @@ COPY . .
 # Descomenta la siguiente línea para deshabilitar la telemetría durante la construcción
 # ENV NEXT_TELEMETRY_DISABLED=1
 
+# Pasar variables de entorno al build (Railway las inyecta automáticamente)
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN npm run build
 
 # Imagen de producción, copiar todos los archivos y ejecutar Next.js

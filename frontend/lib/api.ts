@@ -1,6 +1,13 @@
 // API Base URL - Change this to your FastAPI server URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
+// Debug logging
+console.log('🔧 API Configuration:', {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  API_BASE_URL,
+  isProduction: process.env.NODE_ENV === 'production'
+})
+
 // Types matching the API documentation
 export interface ColumnInfo {
   dtype: string
