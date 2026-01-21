@@ -8,16 +8,18 @@ app = FastAPI(
     version=settings.PROJECT_VERSION
 )
 
-# Configurar CORS
+# CORS configurado desde variables de entorno
+origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especifica los orígenes permitidos
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos HTTP
-    allow_headers=["*"],  # Permite todos los headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(router, prefix="/api")
 
 @app.get("/health")
 async def health_check():
