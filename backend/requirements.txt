@@ -7,4 +7,5 @@ pandas==2.2.0
 numpy==1.26.0
 openpyxl==3.1.0
 python-multipart==0.0.6
-openai==1.12.0
+openai==1.54.0
+httpx==0.27.0
