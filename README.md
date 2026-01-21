@@ -78,7 +78,8 @@ El enfoque actual de enviar solo estadísticas agregadas resultó ser más efect
 
 - Python 3.10 o superior
 - Node.js 18 o superior
-- Una API key de OpenAI (o Anthropic si usas Claude directamente)
+- Una API key de OpenAI
+- Docker (opcional, para ejecutar con contenedor)
 
 ### 1. Clonar el repositorio
 
@@ -88,6 +89,8 @@ cd maic-challenge
 ```
 
 ### 2. Configurar el Backend
+
+**Opción A: Ejecutar con Python directamente**
 
 ```bash
 cd backend
@@ -109,6 +112,22 @@ cp .env.example .env
 # Edita .env y agrega tu OPENAI_API_KEY
 ```
 
+**Opción B: Ejecutar con Docker**
+
+```bash
+cd backend
+
+# Configurar variables de entorno
+cp .env.example .env
+# Edita .env y agrega tu OPENAI_API_KEY
+
+# Construir la imagen
+docker build -t ai-data-analyzer-backend .
+
+# Ejecutar el contenedor
+docker run -p 8000:8000 --env-file .env ai-data-analyzer-backend
+```
+
 ### 3. Configurar el Frontend
 
 ```bash
@@ -126,10 +145,15 @@ cp .env.local.example .env.local
 
 **Terminal 1 - Backend:**
 
+**Opción A (Python directamente):**
+
 ```bash
 cd backend
 uvicorn app.main:app --reload
 ```
+
+**Opción B (Docker):**
+El contenedor ya está corriendo desde el paso anterior.
 
 El backend estará disponible en `http://localhost:8000`
 
@@ -152,13 +176,15 @@ El frontend estará disponible en `http://localhost:3000`
 
 ## 🌐 Despliegue en Railway
 
-Railway hace que el despliegue sea extremadamente simple. Aquí está el proceso paso a paso:
+Railway hace que el despliegue sea extremadamente simple usando Docker. Aquí está el proceso paso a paso:
 
 ### 1. Preparar el proyecto
 
 Ya está todo listo en el repo:
 
-- ✅ `railway.toml` con la configuración
+- ✅ `Dockerfile` para crear la imagen del contenedor
+- ✅ `railway.toml` con la configuración del servicio
+- ✅ `.dockerignore` para optimizar la build
 - ✅ `requirements.txt` con las dependencias
 - ✅ Health check endpoint (`/health`)
 - ✅ Variables de entorno configuradas
@@ -168,12 +194,19 @@ Ya está todo listo en el repo:
 1. Ve a [railway.app](https://railway.app) y crea una cuenta
 2. Click en "New Project" → "Deploy from GitHub repo"
 3. Selecciona este repositorio
-4. En Settings:
+4. Railway detectará el `railway.toml` automáticamente
+5. En Settings:
    - **Root Directory**: `backend`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. En Variables, agrega:
-   - `OPENAI_API_KEY`: tu API key de OpenAI
-6. Railway generará una URL como: `https://tu-backend.up.railway.app`
+   - Railway usará el Dockerfile para construir la imagen
+6. En Variables, agrega:
+   - `OPENAI_API_KEY`: tu API key de OpenAI (empieza con `sk-proj-`)
+   - `ALLOWED_ORIGINS`: por ahora usa `*` (lo actualizaremos después con la URL del frontend)
+7. Railway desplegará automáticamente y generará una URL como: `https://tu-backend.up.railway.app`
+
+**Verificar el Despliegue:**
+
+- Abre `https://tu-backend.up.railway.app/health` en tu navegador
+- Deberías ver: `{"status":"healthy"}`
 
 ### 3. Desplegar el Frontend
 
@@ -186,23 +219,25 @@ Ya está todo listo en el repo:
    - `NEXT_PUBLIC_API_URL`: la URL del backend de Railway (del paso anterior)
 4. Railway generará la URL del frontend
 
-### 4. Configurar Variables de Entorno (importante)
+### 4. Configurar Variables de Entorno Finales
 
-Una vez que tengas ambas URLs, configura las variables de entorno:
+Una vez que tengas ambas URLs, actualiza las variables de entorno:
 
 **Backend Variables:**
 
 1. Ve a tu servicio de backend en Railway
-2. En la sección **Variables**, agrega:
-   - `OPENAI_API_KEY`: Tu API key de OpenAI
-   - `ALLOWED_ORIGINS`: La URL de tu frontend (ej: `https://tu-frontend.up.railway.app,http://localhost:3000`)
+2. En la sección **Variables**, actualiza:
+   - `ALLOWED_ORIGINS`: Reemplaza `*` con las URLs del frontend:
+     ```
+     https://tu-frontend.up.railway.app,http://localhost:3000
+     ```
 
 **Frontend Variables:**
 Ya deberías tener configurado:
 
-- `NEXT_PUBLIC_API_URL`: La URL del backend
+- `NEXT_PUBLIC_API_URL`: La URL del backend (ej: `https://tu-backend.up.railway.app`)
 
-Railway redesplegará automáticamente cuando agregues las variables.
+Railway redesplegará automáticamente cuando agregues o modifiques las variables.
 
 ### 5. ¡Listo! 🎉
 
@@ -221,10 +256,12 @@ maic-challenge/
 │   ├── app/
 │   │   ├── __init__.py
 │   │   ├── config.py          # Configuración y variables de entorno
-│   │   ├── main.py            # Punto de entrada de FastAPI
-│   │   └── routes.py          # Endpoints y lógica de análisis
+│   │   ├── main.py            # Punto de entrada de FastAPI + CORS
+│   │   └── routes.py          # Endpoints y lógica de análisis con IA
+│   ├── .dockerignore          # Archivos excluidos del contenedor
 │   ├── .env.example           # Ejemplo de variables de entorno
 │   ├── .gitignore
+│   ├── Dockerfile             # Configuración del contenedor Docker
 │   ├── railway.toml           # Configuración de Railway
 │   └── requirements.txt       # Dependencias de Python
 │
@@ -235,12 +272,12 @@ maic-challenge/
 │   ├── components/
 │   │   ├── analysis-result.tsx
 │   │   ├── chart-suggestion-card.tsx
-│   │   ├── dashboard.tsx      # Dashboard con gráficos
-│   │   ├── file-upload.tsx
+│   │   ├── dashboard.tsx      # Dashboard con gráficos interactivos
+│   │   ├── file-upload.tsx    # Componente de carga de archivos
 │   │   └── processing-state.tsx
 │   ├── lib/
-│   │   └── api.ts             # Cliente de API
-│   ├── .env.local.example
+│   │   └── api.ts             # Cliente de API para backend
+│   ├── .env.local.example     # Ejemplo de variables de entorno
 │   ├── .gitignore
 │   ├── package.json
 │   └── tsconfig.json
@@ -253,5 +290,31 @@ maic-challenge/
 - Las API keys nunca se incluyen en el código (solo en `.env`)
 - Los archivos `.env` están en `.gitignore`
 - Se proporcionan archivos `.env.example` para documentación
-- CORS configurado para permitir solo orígenes específicos en producción
+- CORS configurado mediante `ALLOWED_ORIGINS` para permitir solo orígenes específicos
 - Los datos subidos se almacenan en memoria temporalmente (1 hora) y luego se eliminan
+- Dockerfile usa multi-stage build con imagen slim de Python 3.10
+
+## 🛠️ Tecnologías Utilizadas
+
+**Backend:**
+
+- FastAPI 0.115.0 - Framework web rápido y moderno
+- OpenAI SDK 1.12.0 - Para análisis inteligente de datos con GPT-4
+- Pandas 2.2.0 - Manipulación y análisis de datos
+- Uvicorn - Servidor ASGI de alto rendimiento
+- Pydantic Settings - Gestión de configuración y variables de entorno
+
+**Frontend:**
+
+- Next.js 16.0.10 - Framework de React con SSR
+- React 19 - Biblioteca UI
+- TypeScript - Tipado estático
+- Recharts - Biblioteca de gráficos para React
+- Tailwind CSS - Framework de CSS utility-first
+- shadcn/ui - Componentes UI accesibles
+
+**DevOps:**
+
+- Docker - Contenedorización
+- Railway.app - Plataforma de despliegue
+- Git - Control de versiones
