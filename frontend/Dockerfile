@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copiar archivos de dependencias
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 # Construir la aplicación
 FROM base AS builder
