@@ -56,3 +56,5 @@ ENV/
 .venv
 *.egg-info/
 .pytest_cache/
+
+personal/

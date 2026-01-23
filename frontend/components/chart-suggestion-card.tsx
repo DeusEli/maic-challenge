@@ -1,31 +1,55 @@
-"use client"
+"use client";
 
-import { Plus, Check, BarChart3, LineChart, PieChart, TrendingUp, Grid3X3, BoxSelect, Activity, Loader2 } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import type { VisualizationSuggestion } from "@/lib/api"
+import {
+  Plus,
+  Check,
+  BarChart3,
+  LineChart,
+  PieChart,
+  TrendingUp,
+  Grid3X3,
+  BoxSelect,
+  Activity,
+  Loader2,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import type { VisualizationSuggestion } from "@/lib/api";
 
-export type ChartType = "bar" | "line" | "pie" | "scatter" | "histogram" | "box" | "heatmap" | "area"
+export type ChartType =
+  | "bar"
+  | "line"
+  | "pie"
+  | "scatter"
+  | "histogram"
+  | "box"
+  | "heatmap"
+  | "area";
 
 export interface DashboardChart {
-  id: string
-  title: string
-  insight: string
-  chartType: ChartType
-  parameters: Record<string, string>
-  data: Array<Record<string, string | number>> | null
-  isLoading: boolean
+  id: string;
+  title: string;
+  insight: string;
+  chartType: ChartType;
+  parameters: Record<string, string>;
+  data: Array<Record<string, string | number>> | null;
+  isLoading: boolean;
 }
 
 interface ChartSuggestionCardProps {
-  suggestion: VisualizationSuggestion
-  index: number
-  isAdded: boolean
-  isLoading: boolean
-  onAdd: (suggestion: VisualizationSuggestion, index: number) => void
-  onRemove: (id: string) => void
+  suggestion: VisualizationSuggestion;
+  index: number;
+  isAdded: boolean;
+  isLoading: boolean;
+  onAdd: (suggestion: VisualizationSuggestion, index: number) => void;
+  onRemove: (id: string) => void;
 }
 
 const chartIcons: Record<ChartType, LucideIcon> = {
@@ -37,7 +61,7 @@ const chartIcons: Record<ChartType, LucideIcon> = {
   histogram: BarChart3,
   box: BoxSelect,
   heatmap: Grid3X3,
-}
+};
 
 const chartLabels: Record<ChartType, string> = {
   bar: "Gráfico de Barras",
@@ -48,25 +72,27 @@ const chartLabels: Record<ChartType, string> = {
   histogram: "Histograma",
   box: "Diagrama de Caja",
   heatmap: "Mapa de Calor",
-}
+};
 
-export function ChartSuggestionCard({ 
-  suggestion, 
+export function ChartSuggestionCard({
+  suggestion,
   index,
-  isAdded, 
+  isAdded,
   isLoading,
-  onAdd, 
-  onRemove 
+  onAdd,
+  onRemove,
 }: ChartSuggestionCardProps) {
-  const chartType = suggestion.chart_type as ChartType
-  const IconComponent = chartIcons[chartType] || BarChart3
-  const chartId = `chart-${index}`
+  const chartType = suggestion.chart_type as ChartType;
+  const IconComponent = chartIcons[chartType] || BarChart3;
+  const chartId = `chart-${index}`;
 
   return (
-    <Card className={cn(
-      "bg-card border-border transition-all duration-200",
-      isAdded && "ring-2 ring-primary"
-    )}>
+    <Card
+      className={cn(
+        "bg-card border-border transition-all duration-200",
+        isAdded && "ring-2 ring-primary",
+      )}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -91,9 +117,9 @@ export function ChartSuggestionCard({
       </CardContent>
       <CardFooter className="pt-0">
         {isAdded ? (
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="w-full gap-2 bg-primary/10 border-primary text-primary hover:bg-primary/20"
             onClick={() => onRemove(chartId)}
             disabled={isLoading}
@@ -111,9 +137,9 @@ export function ChartSuggestionCard({
             )}
           </Button>
         ) : (
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="w-full gap-2 bg-transparent"
             onClick={() => onAdd(suggestion, index)}
             disabled={isLoading}
@@ -133,5 +159,5 @@ export function ChartSuggestionCard({
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }
