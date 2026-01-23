@@ -76,13 +76,12 @@ async def analyze_dataframe_with_ai(df: pd.DataFrame, file_name: str, retry_coun
         numeric_columns = numeric_columns[:20]  # Limitar a 20 columnas numéricas
         describe_stats = df[numeric_columns].describe().to_dict()
     
-    # Construir el prompt con parámetros flexibles
-    # Simplificar el JSON para reducir el tamaño del prompt
+    # Construir el prompt optimizado
     columns_info_str = json.dumps(columns_info, ensure_ascii=False)
     describe_stats_str = json.dumps(describe_stats, default=str, ensure_ascii=False) if describe_stats else "No hay columnas numéricas"
     categorical_stats_str = json.dumps(categorical_stats, ensure_ascii=False) if categorical_stats else "No hay columnas categóricas"
     
-    prompt = f"""Eres un analista de datos experto. Analiza estos datos y sugiere 3-5 visualizaciones que destaquen patrones interesantes.
+    prompt = f"""Analiza estos datos y sugiere 3-5 visualizaciones que destaquen patrones, tendencias o relaciones interesantes.
 
 Archivo: {file_name} | Filas: {len(df)} | Columnas: {len(df.columns)}
 
@@ -95,31 +94,22 @@ Estadísticas numéricas:
 Estadísticas categóricas:
 {categorical_stats_str}
 
-Columnas disponibles: {df.columns.tolist()}
-
 INSTRUCCIONES:
-- Analiza patrones y relaciones interesantes
-- Sugiere 3-5 visualizaciones específicas
-- Para cada visualización proporciona: title, chart_type, parameters, insight
-- TODOS los textos (title e insight) deben estar completamente EN ESPAÑOL
-- SOLO usa los siguientes tipos de gráficos: bar, line, pie, scatter, histogram, area
+- Identifica patrones, anomalías, correlaciones o tendencias interesantes en los datos
+- Sugiere 3-5 visualizaciones que demuestren estos hallazgos
+- Cada visualización debe incluir: title, chart_type, parameters, insight
+- El "insight" debe describir un HALLAZGO ESPECÍFICO sobre los datos (ej: "La categoría X representa el 60% del total", "Se observa una tendencia creciente de Y%", "Existe correlación positiva entre A y B")
+- NO describas el tipo de gráfico en el insight, describe el hallazgo que se visualiza
+- Todos los textos EN ESPAÑOL
+- Tipos permitidos: bar, line, pie, scatter, histogram, area
+- Nombres de columnas deben coincidir exactamente con el esquema
 
-FORMATO (devuelve SOLO un array JSON válido):
+FORMATO JSON (ejemplos):
+- Ejes X/Y: {{"title": "...", "chart_type": "bar", "parameters": {{"x_axis": "col_x", "y_axis": "col_y"}}, "insight": "..."}}
+- Pie: {{"title": "...", "chart_type": "pie", "parameters": {{"labels": "col_cat", "values": "col_val"}}, "insight": "..."}}
+- Histograma: {{"title": "...", "chart_type": "histogram", "parameters": {{"column": "col_num"}}, "insight": "..."}}
 
-Gráficos con ejes (bar, line, scatter, area):
-{{"title": "...", "chart_type": "bar", "parameters": {{"x_axis": "col_x", "y_axis": "col_y"}}, "insight": "..."}}
-
-Gráficos pie:
-{{"title": "...", "chart_type": "pie", "parameters": {{"labels": "col_cat", "values": "col_val"}}, "insight": "..."}}
-
-Histogramas:
-{{"title": "...", "chart_type": "histogram", "parameters": {{"column": "col_num"}}, "insight": "..."}}
-
-IMPORTANTE: 
-- Devuelve SOLO el JSON array, sin texto adicional
-- Los nombres de columnas en parameters deben coincidir exactamente con las columnas disponibles
-- TODOS los title e insight DEBEN estar EN ESPAÑOL
-- NO uses tipos box ni heatmap"""
+Devuelve SOLO un array JSON sin texto adicional."""
 
     try:
         response = client.chat.completions.create(
@@ -127,7 +117,7 @@ IMPORTANTE:
             messages=[
                 {
                     "role": "system",
-                    "content": "Eres un analista de datos experto especializado en identificar patrones y sugerir visualizaciones efectivas. Siempre respondes con JSON válido y estructurado. Asegúrate de usar los parámetros correctos según el tipo de gráfico. IMPORTANTE: Todos los textos (title e insight) deben estar completamente EN ESPAÑOL."
+                    "content": "Eres un analista de datos experto. Identifica hallazgos significativos en los datos: patrones, tendencias, anomalías, correlaciones. Tus insights deben describir descubrimientos específicos sobre los datos, no el tipo de gráfico. Respondes SOLO con JSON válido. Textos EN ESPAÑOL."
                 },
                 {
                     "role": "user",
