@@ -143,11 +143,23 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(280, 20%, 15%)",
-                border: "1px solid hsl(280, 10%, 30%)",
+                backgroundColor: "rgba(24, 24, 27, 0.95)",
+                border: "1px solid rgba(63, 63, 70, 0.8)",
                 borderRadius: "8px",
-                color: "hsl(0, 0%, 98%)",
+                color: "rgb(250, 250, 250)",
+                boxShadow:
+                  "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
               }}
+              labelStyle={{
+                color: "rgb(250, 250, 250)",
+                fontWeight: 600,
+                marginBottom: "4px",
+              }}
+              itemStyle={{
+                color: "rgb(228, 228, 231)",
+                padding: "2px 0",
+              }}
+              cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
             />
             <Bar
               dataKey={chart.chartType === "histogram" ? "count" : "value"}
@@ -178,11 +190,23 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(280, 20%, 15%)",
-                border: "1px solid hsl(280, 10%, 30%)",
+                backgroundColor: "rgba(24, 24, 27, 0.95)",
+                border: "1px solid rgba(63, 63, 70, 0.8)",
                 borderRadius: "8px",
-                color: "hsl(0, 0%, 98%)",
+                color: "rgb(250, 250, 250)",
+                boxShadow:
+                  "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
               }}
+              labelStyle={{
+                color: "rgb(250, 250, 250)",
+                fontWeight: 600,
+                marginBottom: "4px",
+              }}
+              itemStyle={{
+                color: "rgb(228, 228, 231)",
+                padding: "2px 0",
+              }}
+              cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
             />
             <Line
               type="monotone"
@@ -220,10 +244,21 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(280, 20%, 15%)",
-                border: "1px solid hsl(280, 10%, 30%)",
+                backgroundColor: "rgba(24, 24, 27, 0.95)",
+                border: "1px solid rgba(63, 63, 70, 0.8)",
                 borderRadius: "8px",
-                color: "hsl(0, 0%, 98%)",
+                color: "rgb(250, 250, 250)",
+                boxShadow:
+                  "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
+              }}
+              labelStyle={{
+                color: "rgb(250, 250, 250)",
+                fontWeight: 600,
+                marginBottom: "4px",
+              }}
+              itemStyle={{
+                color: "rgb(228, 228, 231)",
+                padding: "2px 0",
               }}
             />
           </PieChart>
@@ -263,11 +298,23 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(280, 20%, 15%)",
-                border: "1px solid hsl(280, 10%, 30%)",
+                backgroundColor: "rgba(24, 24, 27, 0.95)",
+                border: "1px solid rgba(63, 63, 70, 0.8)",
                 borderRadius: "8px",
-                color: "hsl(0, 0%, 98%)",
+                color: "rgb(250, 250, 250)",
+                boxShadow:
+                  "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
               }}
+              labelStyle={{
+                color: "rgb(250, 250, 250)",
+                fontWeight: 600,
+                marginBottom: "4px",
+              }}
+              itemStyle={{
+                color: "rgb(228, 228, 231)",
+                padding: "2px 0",
+              }}
+              cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
             />
             <Area
               type="monotone"
@@ -297,11 +344,23 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(280, 20%, 15%)",
-                border: "1px solid hsl(280, 10%, 30%)",
+                backgroundColor: "rgba(24, 24, 27, 0.95)",
+                border: "1px solid rgba(63, 63, 70, 0.8)",
                 borderRadius: "8px",
-                color: "hsl(0, 0%, 98%)",
+                color: "rgb(250, 250, 250)",
+                boxShadow:
+                  "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
               }}
+              labelStyle={{
+                color: "rgb(250, 250, 250)",
+                fontWeight: 600,
+                marginBottom: "4px",
+              }}
+              itemStyle={{
+                color: "rgb(228, 228, 231)",
+                padding: "2px 0",
+              }}
+              cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
             />
             <Scatter data={chartData} fill={CHART_COLORS[0]} />
           </ScatterChart>
@@ -333,23 +392,35 @@ function renderChart(chart: DashboardChart, expanded: boolean) {
                 axisLine={{ stroke: "hsl(280, 10%, 30%)" }}
               />
               <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(280, 20%, 15%)",
-                  border: "1px solid hsl(280, 10%, 30%)",
-                  borderRadius: "8px",
-                  color: "hsl(0, 0%, 98%)",
-                }}
                 content={({ payload }) => {
                   if (!payload || payload.length === 0) return null;
                   const data = payload[0].payload;
                   return (
-                    <div className="bg-card p-3 rounded-lg border border-border text-xs">
-                      <p className="font-semibold mb-1">{data.category}</p>
-                      <p>Máximo: {data.max?.toFixed(2)}</p>
-                      <p>Q3: {data.q3?.toFixed(2)}</p>
-                      <p>Mediana: {data.median?.toFixed(2)}</p>
-                      <p>Q1: {data.q1?.toFixed(2)}</p>
-                      <p>Mínimo: {data.min?.toFixed(2)}</p>
+                    <div
+                      className="p-3 rounded-lg text-xs"
+                      style={{
+                        backgroundColor: "rgba(24, 24, 27, 0.95)",
+                        border: "1px solid rgba(63, 63, 70, 0.8)",
+                        boxShadow:
+                          "0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.2)",
+                      }}
+                    >
+                      <p
+                        className="font-semibold mb-2"
+                        style={{ color: "rgb(250, 250, 250)" }}
+                      >
+                        {data.category}
+                      </p>
+                      <div
+                        className="space-y-0.5"
+                        style={{ color: "rgb(228, 228, 231)" }}
+                      >
+                        <p>Máximo: {data.max?.toFixed(2)}</p>
+                        <p>Q3: {data.q3?.toFixed(2)}</p>
+                        <p>Mediana: {data.median?.toFixed(2)}</p>
+                        <p>Q1: {data.q1?.toFixed(2)}</p>
+                        <p>Mínimo: {data.min?.toFixed(2)}</p>
+                      </div>
                     </div>
                   );
                 }}
@@ -465,9 +536,9 @@ function DashboardCard({
     <Card
       className={`bg-card border-border transition-all duration-300 ${expanded ? "md:col-span-2" : ""}`}
     >
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1">
             <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
             <CardTitle className="text-sm font-medium text-foreground">
               {chart.title}
@@ -496,6 +567,63 @@ function DashboardCard({
             </Button>
           </div>
         </div>
+
+        {/* Resumen descriptivo del gráfico */}
+        {chart.insight && (
+          <div className="mt-2 pt-2 border-t border-border">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {chart.insight}
+            </p>
+          </div>
+        )}
+
+        {/* Variables de los ejes */}
+        {(chart.parameters.x_axis ||
+          chart.parameters.y_axis ||
+          chart.parameters.column) && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {chart.parameters.x_axis && (
+              <div className="inline-flex items-center gap-1 rounded-md bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 border border-blue-500/20">
+                <span className="text-[10px] font-medium text-blue-700 dark:text-blue-300">
+                  Eje X:
+                </span>
+                <span className="text-[10px] text-blue-600 dark:text-blue-400">
+                  {chart.parameters.x_axis}
+                </span>
+              </div>
+            )}
+            {chart.parameters.y_axis && (
+              <div className="inline-flex items-center gap-1 rounded-md bg-green-500/10 dark:bg-green-500/20 px-2 py-0.5 border border-green-500/20">
+                <span className="text-[10px] font-medium text-green-700 dark:text-green-300">
+                  Eje Y:
+                </span>
+                <span className="text-[10px] text-green-600 dark:text-green-400">
+                  {chart.parameters.y_axis}
+                </span>
+              </div>
+            )}
+            {chart.parameters.column && !chart.parameters.x_axis && (
+              <div className="inline-flex items-center gap-1 rounded-md bg-purple-500/10 dark:bg-purple-500/20 px-2 py-0.5 border border-purple-500/20">
+                <span className="text-[10px] font-medium text-purple-700 dark:text-purple-300">
+                  Columna:
+                </span>
+                <span className="text-[10px] text-purple-600 dark:text-purple-400">
+                  {chart.parameters.column}
+                </span>
+              </div>
+            )}
+            {chart.parameters.group_by && (
+              <div className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 dark:bg-amber-500/20 px-2 py-0.5 border border-amber-500/20">
+                <span className="text-[10px] font-medium text-amber-700 dark:text-amber-300">
+                  Agrupar:
+                </span>
+                <span className="text-[10px] text-amber-600 dark:text-amber-400">
+                  {chart.parameters.group_by}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="pt-0">{renderChart(chart, expanded)}</CardContent>
     </Card>
